@@ -6,6 +6,7 @@ components/noqopen_portal/portal_page.h. Run after editing anything in portal/:
 
     python3 portal/build.py            # writes the header
     python3 portal/build.py --html out # also writes the inlined page for a browser preview
+    python3 portal/build.py --check    # fails if portal_page.h is not built from the current sources (CI)
 """
 import gzip
 import pathlib
@@ -60,8 +61,18 @@ def header(data: bytes) -> str:
     )
 
 
+def committed() -> str:
+    data = bytes(int(x, 16) for x in re.findall(r"0x([0-9a-f]{2})", OUT.read_text(encoding="utf-8")))
+    return gzip.decompress(data).decode("utf-8")
+
+
 def main() -> None:
     html = page()
+    if "--check" in sys.argv:
+        if committed() != html:
+            sys.exit("portal_page.h is out of date: run python3 portal/build.py and commit it")
+        print("portal_page.h is up to date")
+        return
     data = gzip.compress(html.encode("utf-8"), compresslevel=9, mtime=0)
     OUT.write_text(header(data), encoding="utf-8")
     if "--html" in sys.argv:
