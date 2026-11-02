@@ -1,0 +1,166 @@
+# Gloam · amber + warm white light line for ceiling beams
+# NOQopen · https://open.noq.works/projects/gloam/ · firmware MIT licence
+#
+# Two 12 V COB channels (amber ~1800 K, warm white 3000 K) dimmed by one ESP8266 through a ULN2003.
+# First boot opens the "gloam-xxxxxx" setup network with the NOQopen setup page; once the device has a home network
+# it never opens that network again. Five quick power cycles (each under 10 s) reset it to factory state.
+
+substitutions:
+  name: gloam
+  friendly_name: Gloam
+  amber_pin: GPIO5          # D1 → ULN2003 IN1 + IN2
+  warm_pin: GPIO4           # D2 → ULN2003 IN3 + IN4
+  pwm_frequency: 1000 Hz
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: true
+  project:
+    name: noqopen.gloam
+    version: "1.0.0"
+  on_boot:
+    - priority: 200         # after Wi-Fi has loaded saved credentials
+      then:
+        - lambda: |-
+            // A configured device never falls back to an open setup network.
+            if (wifi::global_wifi_component->has_sta()) wifi::global_wifi_component->set_ap_timeout(0);
+
+esp8266:
+  board: d1_mini
+  restore_from_flash: true
+
+external_components:
+  - source: github://noqworks/gloam@main
+    components: [noqopen_portal]
+
+dashboard_import:
+  package_import_url: github://noqworks/gloam/firmware/gloam.yaml@main
+  import_full_config: true
+
+logger:
+
+api:
+  encryption: {}            # no key in firmware: Home Assistant sets it on first connection
+
+ota:
+  - platform: esphome
+
+wifi:
+  ap: {}                    # setup network, only while the device has no home network
+  on_connect:
+    - lambda: wifi::global_wifi_component->set_ap_timeout(0);
+
+captive_portal:
+noqopen_portal:
+improv_serial:
+
+provisioning:
+  timeout: 30min            # unconfigured device stops accepting setup after 30 min until power cycled
+
+factory_reset:
+  resets_required: 5
+  max_delay: 10s
+
+output:
+  - platform: esp8266_pwm
+    id: out_amber
+    pin: ${amber_pin}
+    frequency: ${pwm_frequency}
+  - platform: esp8266_pwm
+    id: out_warm
+    pin: ${warm_pin}
+    frequency: ${pwm_frequency}
+
+light:
+  - platform: monochromatic
+    id: amber
+    name: Amber
+    icon: mdi:candle
+    output: out_amber
+    gamma_correct: 2.8
+    default_transition_length: 0.5s
+    restore_mode: RESTORE_DEFAULT_OFF
+    effects:
+      - lambda:
+          name: Candle
+          update_interval: 40ms
+          lambda: |-
+            static float level = 1.0f, target = 1.0f;
+            float r = random_float();
+            if (r < 0.06f) target = 0.55f + random_float() * 0.23f;
+            else if (r < 0.18f) target = 0.86f + random_float() * 0.14f;
+            level += (target - level) * 0.22f;
+            id(out_amber).set_level(powf(id(amber).current_values.get_brightness() * level, 2.8f));
+      - lambda:
+          name: Fireplace
+          update_interval: 30ms
+          lambda: |-
+            static float level = 1.0f, target = 1.0f;
+            float r = random_float();
+            if (r < 0.18f) target = 0.35f + random_float() * 0.35f;
+            else if (r < 0.30f) target = 0.86f + random_float() * 0.14f;
+            level += (target - level) * 0.35f;
+            id(out_amber).set_level(powf(id(amber).current_values.get_brightness() * level, 2.8f));
+      - pulse:
+          name: Breathe
+          transition_length: 2.5s
+          update_interval: 2.5s
+          min_brightness: 15%
+          max_brightness: 100%
+      - flicker:
+          name: Flicker
+          alpha: 94%
+          intensity: 6%
+
+  - platform: monochromatic
+    id: warm_white
+    name: Warm white
+    icon: mdi:lightbulb-on-outline
+    output: out_warm
+    gamma_correct: 2.8
+    default_transition_length: 0.5s
+    restore_mode: RESTORE_DEFAULT_OFF
+    effects:
+      - lambda:
+          name: Candle
+          update_interval: 40ms
+          lambda: |-
+            static float level = 1.0f, target = 1.0f;
+            float r = random_float();
+            if (r < 0.06f) target = 0.55f + random_float() * 0.23f;
+            else if (r < 0.18f) target = 0.86f + random_float() * 0.14f;
+            level += (target - level) * 0.22f;
+            id(out_warm).set_level(powf(id(warm_white).current_values.get_brightness() * level, 2.8f));
+      - lambda:
+          name: Cloud
+          update_interval: 100ms
+          lambda: |-
+            static float level = 1.0f, target = 1.0f;
+            static uint32_t last = 0;
+            if (millis() - last > 4000 + (uint32_t) (random_float() * 8000)) {
+              last = millis();
+              target = 0.55f + random_float() * 0.45f;
+            }
+            level += (target - level) * 0.02f;
+            id(out_warm).set_level(powf(id(warm_white).current_values.get_brightness() * level, 2.8f));
+      - pulse:
+          name: Breathe
+          transition_length: 2.5s
+          update_interval: 2.5s
+          min_brightness: 15%
+          max_brightness: 100%
+
+sensor:
+  - platform: wifi_signal
+    name: Wi-Fi signal
+    update_interval: 60s
+    entity_category: diagnostic
+
+button:
+  - platform: restart
+    name: Restart
+    entity_category: diagnostic
+  - platform: factory_reset
+    name: Factory reset
+    entity_category: diagnostic

@@ -1,0 +1,38 @@
+name: Firmware
+
+on:
+  push:
+    paths: ["firmware/**", "components/**", "portal/**", ".github/workflows/firmware.yml"]
+  pull_request:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the setup page is built
+        run: |
+          python3 portal/build.py
+          git diff --exit-code components/noqopen_portal/portal_page.h
+      - name: Use this checkout for the setup page component
+        run: sed -i 's#source: github://noqworks/gloam@main#source: { type: local, path: ../components }#' firmware/gloam.yaml
+      - uses: esphome/build-action@v7.0.0
+        id: esphome
+        with:
+          yaml-file: firmware/gloam.yaml
+          complete-manifest: true
+      - name: Attach binaries to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v="${{ github.event.release.tag_name }}"
+          d="${{ steps.esphome.outputs.name }}"
+          cp "$d/${d}.factory.bin" "gloam-${v#v}.factory.bin"
+          cp "$d/${d}.ota.bin" "gloam-${v#v}.ota.bin"
+          gh release upload "$v" "gloam-${v#v}.factory.bin" "gloam-${v#v}.ota.bin" --clobber

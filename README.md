@@ -1,0 +1,69 @@
+<p align="center"><img src="docs/noqopen.svg" alt="NOQ Open" height="40"></p>
+
+# Gloam
+
+Amber and warm white light line for ceiling beams. Small 3D-printed fixtures, two dimmable 12 V COB channels, one ESP8266 and Home Assistant. No cloud, no account.
+
+**Project page, photos and browser installer:** https://open.noq.works/projects/gloam/ · [Türkçe](README.tr.md)
+
+## What it does
+
+- **Amber (~1800 K) and warm white (3000 K)** in every fixture, dimmed separately or together.
+- **Effects** on the device: candle, fireplace, breathe, flicker (amber) and candle, cloud, breathe (warm white).
+- **Runs locally.** Home Assistant discovers it over ESPHome; the API key is set by Home Assistant on first connection, so no secret is baked into the firmware.
+- **Its own setup screen.** On first boot it opens a `gloam-xxxxxx` network with the NOQ Open Wi-Fi setup page. Once it has joined your network it never opens that network again.
+
+## Repository
+
+| Path | Contents |
+|---|---|
+| `firmware/gloam.yaml` | ESPHome configuration (pins, effects, provisioning) |
+| `components/noqopen_portal/` | ESPHome external component that serves the NOQ Open setup page on the captive portal |
+| `portal/` | Setup page source: `tokens.css` → `components.css` → `index.html` + `app.js`; `build.py` inlines and gzips it into `components/noqopen_portal/portal_page.h` |
+| `hardware/stl/` | Print files |
+| `releases.json` | Versions and release notes; `tools/changelog.py` writes `CHANGELOG.md` / `CHANGELOG.tr.md` from it |
+| `docs/wiring.svg` | Wiring diagram |
+
+## Build
+
+Parts, tools, print settings and step-by-step build with photos are on the [project page](https://open.noq.works/projects/gloam/). In short:
+
+1. Print one body and one diffuser per fixture (PETG; body white, diffuser clear) and the three-part controller box.
+2. Fit 5 cm of amber and 5 cm of warm white COB strip into each body, plus ends joined.
+3. Run 3-core 0.5 mm² cable through the fixtures: +12 V shared, amber − and warm white − separate.
+4. Wire the controller as in `docs/wiring.svg`: D1 → ULN2003A IN1+IN2 (amber), D2 → IN3+IN4 (warm white), COM to +12 V, 12 → 5 V step-down for the D1 mini.
+
+The ULN2003A carries about 1 m of COB strip per colour. For longer lines use one logic-level MOSFET per colour; the firmware is the same.
+
+## Firmware
+
+**Browser:** open https://open.noq.works/install/gloam/ in Chrome or Edge on a desktop. The setup wizard flashes the board over USB, joins Wi-Fi and hands over to Home Assistant.
+
+**ESPHome:** adopt the device in ESPHome Builder (it is announced with `dashboard_import`), or build it yourself:
+
+```bash
+esphome run firmware/gloam.yaml
+```
+
+Change pins or PWM frequency with the `substitutions` at the top of the file.
+
+**Setup page:** edit files in `portal/`, then run `python3 portal/build.py` and rebuild the firmware.
+
+### Setup and reset
+
+- Unconfigured: the device opens `gloam-xxxxxx` and keeps it open for 30 minutes (provisioning window). Power-cycle to reopen.
+- Configured: no setup network, ever. Wi-Fi can still be changed over USB (Improv serial).
+- Factory reset: cut and restore power 5 times, each within 10 seconds, or press *Factory reset* in Home Assistant.
+
+## Versions
+
+Versions are MAJOR.MINOR.PATCH: patch = fixes, minor = compatible new features or parts, major = needs new parts or wiring. What changed in each version and what is planned next: [CHANGELOG.md](CHANGELOG.md).
+
+## Licence
+
+- Firmware, setup page and component: [MIT](LICENSE)
+- Print files, wiring diagram and documentation: [CC BY 4.0](LICENSE-HARDWARE)
+
+Attribution: *Gloam, NOQ Open · open.noq.works/projects/gloam*
+
+Made one or improved it? Open an [issue](https://github.com/noqworks/gloam/issues) or write to hello@noq.works.

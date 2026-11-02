@@ -1,0 +1,79 @@
+{
+  "product": "gloam",
+  "name": "Gloam",
+  "repo": "https://github.com/noqworks/gloam",
+  "site": "https://open.noq.works/projects/gloam/",
+  "files": "https://open.noq.works/files/gloam/",
+  "next": {
+    "version": "1.1.0",
+    "items": [
+      {
+        "area": "firmware",
+        "en": "Update notice in Home Assistant with a link to the release notes. Optional: the device works fully without it.",
+        "tr": "Home Assistant'ta güncelleme bildirimi ve sürüm notu bağlantısı. İsteğe bağlı: cihaz onsuz da tamamen çalışır."
+      },
+      {
+        "area": "hardware",
+        "en": "Editable CAD sources next to the print files.",
+        "tr": "Baskı dosyalarının yanında düzenlenebilir CAD kaynakları."
+      },
+      {
+        "area": "docs",
+        "en": "A close-up photo for every build step.",
+        "tr": "Her yapım adımı için yakın plan fotoğraf."
+      }
+    ]
+  },
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-02",
+      "summary": {
+        "en": "First open release.",
+        "tr": "İlk açık sürüm."
+      },
+      "changes": [
+        {
+          "area": "hardware",
+          "en": "Oval fixture body and plain diffuser; three-part controller box (box, lid, inner plate) for M3 heat-set inserts.",
+          "tr": "Oval armatür gövdesi ve düz difüzör; M3 ısıl insertli üç parçalı denetleyici kutusu (kutu, kapak, iç plaka)."
+        },
+        {
+          "area": "hardware",
+          "en": "Since the prototype: the cable entry at both ends of the body is a 7.5 × 7 mm arch for ~6 mm round cable.",
+          "tr": "Prototipten bu yana: gövdenin iki ucundaki kablo girişi ~6 mm yuvarlak kablo için 7,5 × 7 mm kemer oldu."
+        },
+        {
+          "area": "hardware",
+          "en": "Since the prototype: in the controller box, the four standoffs that overlapped the corner screw moved 9 mm down; inner plate holes are M3 clearance (Ø3.4).",
+          "tr": "Prototipten bu yana: denetleyici kutusunda köşe vidasıyla çakışan dört dikme 9 mm aşağı alındı; iç plaka delikleri M3 geçişine (Ø3,4) açıldı."
+        },
+        {
+          "area": "firmware",
+          "en": "ESPHome firmware: amber and warm white dimmed separately, effects on the device, Home Assistant discovery with the API key set on first connection.",
+          "tr": "ESPHome yazılımı: amber ve gün ışığı ayrı kısılır, efektler cihazda çalışır, Home Assistant cihazı bulur; API anahtarı ilk bağlantıda belirlenir."
+        },
+        {
+          "area": "firmware",
+          "en": "Setup: NOQ Open setup page in Turkish and English on the device's own network, 30-minute setup window, Wi-Fi over USB (Improv), factory reset with five power cycles.",
+          "tr": "Kurulum: cihazın kendi ağında Türkçe ve İngilizce NOQ Open kurulum ekranı, 30 dakikalık kurulum penceresi, USB üzerinden Wi-Fi (Improv), gücü beş kez kesip açarak fabrika ayarları."
+        },
+        {
+          "area": "setup",
+          "en": "Browser installer: write the firmware and set Wi-Fi from open.noq.works/install/gloam, nothing to install.",
+          "tr": "Tarayıcıdan kurulum: yazılımı yükle ve Wi-Fi'yi open.noq.works/tr/kurulum/gloam adresinden ayarla, hiçbir şey kurman gerekmez."
+        },
+        {
+          "area": "docs",
+          "en": "Wiring diagram, parts list with suppliers in Turkey, step-by-step build with checks.",
+          "tr": "Bağlantı şeması, Türkiye'den tedarik bağlantılı parça listesi, kontrollü adım adım yapım."
+        }
+      ],
+      "compatibility": {
+        "en": "First release.",
+        "tr": "İlk sürüm."
+      },
+      "credits": []
+    }
+  ]
+}
