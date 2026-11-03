@@ -18,7 +18,7 @@ esphome:
   name_add_mac_suffix: true
   project:
     name: noqopen.gloam
-    version: "1.0.0"
+    version: "1.1.0"
   on_boot:
     - priority: 200         # after Wi-Fi has loaded saved credentials
       then:

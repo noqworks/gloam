@@ -20,7 +20,9 @@ Amber and warm white light line for ceiling beams. Small 3D-printed fixtures, tw
 | `firmware/gloam.yaml` | ESPHome configuration (pins, effects, provisioning) |
 | `components/noqopen_portal/` | ESPHome external component that serves the NOQ Open setup page on the captive portal |
 | `portal/` | Setup page source: `tokens.css` → `components.css` → `index.html` + `app.js`; `build.py` inlines and gzips it into `components/noqopen_portal/portal_page.h` |
-| `hardware/stl/` | Print files |
+| `hardware/stl/` | Print files, ready to slice |
+| `hardware/step/` | STEP files for any CAD program, plus a controller assembly with the power supply and perfboard |
+| `hardware/cad/` | Editable CadQuery sources for every printed part; parameters, hardware and print settings in [its README](hardware/cad/README.md) |
 | `releases.json` | Versions and release notes; `tools/changelog.py` writes `CHANGELOG.md` / `CHANGELOG.tr.md` from it |
 | `docs/wiring.svg` | Wiring diagram |
 
@@ -28,10 +30,11 @@ Amber and warm white light line for ceiling beams. Small 3D-printed fixtures, tw
 
 Parts, tools, print settings and step-by-step build with photos are on the [project page](https://open.noq.works/projects/gloam/). In short:
 
-1. Print one body and one diffuser per fixture (PETG; body white, diffuser clear) and the three-part controller box.
+1. Print one body and one diffuser per fixture (PETG; body white, diffuser clear) and the two-part controller box (box and lid).
 2. Fit 5 cm of amber and 5 cm of warm white COB strip into each body, plus ends joined.
 3. Run 3-core 0.5 mm² cable through the fixtures: +12 V shared, amber − and warm white − separate.
 4. Wire the controller as in `docs/wiring.svg`: D1 → ULN2003A IN1+IN2 (amber), D2 → IN3+IN4 (warm white), COM to +12 V, 12 → 5 V step-down for the D1 mini.
+5. Close the controller: Mean Well LRS-75-12 in its corner stops, perfboard on the four standoffs, PG11 gland for mains and PG7 for the LED line, lid with four M3 screws in heat-set inserts. Full hardware list in [hardware/cad](hardware/cad/README.md).
 
 The ULN2003A carries about 1 m of COB strip per colour. For longer lines use one logic-level MOSFET per colour; the firmware is the same.
 

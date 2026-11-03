@@ -10,13 +10,9 @@ Gloam için bütün değişiklikler, en yenisi üstte. Sürümler ANA.ARA.YAMA b
 
 _`releases.json` dosyasından `tools/changelog.py` ile üretilir. Bu dosyayı değil, onu düzenle._
 
-## Sıradaki: 1.1.0
+## Sıradaki: 1.2.0
 
 Planlananlar; talep ve sorulardan. Önerin ya da takıldığın bir yer varsa: [konular](https://github.com/noqworks/gloam/issues).
-
-### Donanım
-
-- Baskı dosyalarının yanında düzenlenebilir CAD kaynakları.
 
 ### Yazılım
 
@@ -25,6 +21,22 @@ Planlananlar; talep ve sorulardan. Önerin ya da takıldığın bir yer varsa: [
 ### Belgeler
 
 - Her yapım adımı için yakın plan fotoğraf.
+
+## 1.1.0 · 2026-11-03
+
+Gerçek parçalara göre yeniden tasarlanan denetleyici kutusu ve her baskı parçası için düzenlenebilir CAD kaynakları.
+
+### Donanım
+
+- Denetleyici kutusu parça listesine göre baştan tasarlandı: Mean Well LRS-75-12, 50 × 70 mm pertinaks, aynı uç duvarda PG11 şebeke ve PG7 LED rakoru.
+- Bir ayırıcı ve kapağın altındaki kaburga, şebeke klemenslerini ve kablolarını 12 V tarafından ayırır.
+- Kapak dört M3 havşa başlı vidayla ısıl insertlere bağlanır; yerine oturtan dudak, güç kaynağının üstünde menfez ve onu bastıran ayaklar var. D1 mini için USB yuvası ve iki montaj kulağı eklendi.
+- İç plaka kalktı: pertinaks kutu tabanındaki ayaklara oturur.
+- Her baskı parçası için düzenlenebilir CAD kaynakları (CadQuery), her CAD programında açılan STEP dosyaları ve uyumu denetlemek için güç kaynağı, pertinaks ve rakorlarla montaj STEP'i.
+- Armatür gövdesi ve difüzör aynı ölçülerle parametrik model olarak yeniden kuruldu; 1.0.0'dan basılmış parçalar uyumlu kalır.
+
+**Uyumluluk:** Armatürler, yazılım ve bağlantılar aynı. Denetleyici yeni iki parçalı bir set (kutu ve kapak); bir PG11 ve bir PG7 rakor, dört M3 ısıl insert, dört M3 × 8 havşa başlı ve dört M2 × 6 vida ister. 1.0.0 ile yapılmış denetleyici çalışmaya devam eder.
+**Dosyalar:** [kaynak ve baskı dosyaları (zip)](https://open.noq.works/files/gloam/gloam-1.1.0-source.zip) · [GitHub sürümü](https://github.com/noqworks/gloam/releases/tag/v1.1.0)
 
 ## 1.0.0 · 2026-11-02
 

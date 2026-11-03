@@ -5,17 +5,12 @@
   "site": "https://open.noq.works/projects/gloam/",
   "files": "https://open.noq.works/files/gloam/",
   "next": {
-    "version": "1.1.0",
+    "version": "1.2.0",
     "items": [
       {
         "area": "firmware",
         "en": "Update notice in Home Assistant with a link to the release notes. Optional: the device works fully without it.",
         "tr": "Home Assistant'ta güncelleme bildirimi ve sürüm notu bağlantısı. İsteğe bağlı: cihaz onsuz da tamamen çalışır."
-      },
-      {
-        "area": "hardware",
-        "en": "Editable CAD sources next to the print files.",
-        "tr": "Baskı dosyalarının yanında düzenlenebilir CAD kaynakları."
       },
       {
         "area": "docs",
@@ -25,6 +20,51 @@
     ]
   },
   "releases": [
+    {
+      "version": "1.1.0",
+      "date": "2026-11-03",
+      "summary": {
+        "en": "A new controller enclosure built around the real parts, and editable CAD sources for every printed part.",
+        "tr": "Gerçek parçalara göre yeniden tasarlanan denetleyici kutusu ve her baskı parçası için düzenlenebilir CAD kaynakları."
+      },
+      "changes": [
+        {
+          "area": "hardware",
+          "en": "Controller enclosure redesigned around the parts in the list: Mean Well LRS-75-12, a 50 × 70 mm perfboard, a PG11 mains gland and a PG7 LED gland on the same end wall.",
+          "tr": "Denetleyici kutusu parça listesine göre baştan tasarlandı: Mean Well LRS-75-12, 50 × 70 mm pertinaks, aynı uç duvarda PG11 şebeke ve PG7 LED rakoru."
+        },
+        {
+          "area": "hardware",
+          "en": "A divider and a rib under the lid keep the mains terminals and wiring apart from the 12 V side.",
+          "tr": "Bir ayırıcı ve kapağın altındaki kaburga, şebeke klemenslerini ve kablolarını 12 V tarafından ayırır."
+        },
+        {
+          "area": "hardware",
+          "en": "Lid with four M3 countersunk screws in heat-set inserts, a locating lip, vents above the power supply and pads that hold it down; a USB slot for the D1 mini; two mounting ears.",
+          "tr": "Kapak dört M3 havşa başlı vidayla ısıl insertlere bağlanır; yerine oturtan dudak, güç kaynağının üstünde menfez ve onu bastıran ayaklar var. D1 mini için USB yuvası ve iki montaj kulağı eklendi."
+        },
+        {
+          "area": "hardware",
+          "en": "The inner plate is gone: the perfboard sits on standoffs in the box floor.",
+          "tr": "İç plaka kalktı: pertinaks kutu tabanındaki ayaklara oturur."
+        },
+        {
+          "area": "hardware",
+          "en": "Editable CAD sources (CadQuery) for every printed part, STEP files that open in any CAD program, and an assembly STEP with the power supply, perfboard and glands for checking the fit.",
+          "tr": "Her baskı parçası için düzenlenebilir CAD kaynakları (CadQuery), her CAD programında açılan STEP dosyaları ve uyumu denetlemek için güç kaynağı, pertinaks ve rakorlarla montaj STEP'i."
+        },
+        {
+          "area": "hardware",
+          "en": "Fixture body and diffuser rebuilt as parametric models with the same dimensions; parts printed from 1.0.0 still fit.",
+          "tr": "Armatür gövdesi ve difüzör aynı ölçülerle parametrik model olarak yeniden kuruldu; 1.0.0'dan basılmış parçalar uyumlu kalır."
+        }
+      ],
+      "compatibility": {
+        "en": "Fixtures, firmware and wiring are unchanged. The controller is a new two-part set (box and lid) that needs a PG11 and a PG7 gland, four M3 heat-set inserts, four M3 × 8 countersunk screws and four M2 × 6 screws; a controller built from 1.0.0 keeps working.",
+        "tr": "Armatürler, yazılım ve bağlantılar aynı. Denetleyici yeni iki parçalı bir set (kutu ve kapak); bir PG11 ve bir PG7 rakor, dört M3 ısıl insert, dört M3 × 8 havşa başlı ve dört M2 × 6 vida ister. 1.0.0 ile yapılmış denetleyici çalışmaya devam eder."
+      },
+      "credits": []
+    },
     {
       "version": "1.0.0",
       "date": "2026-11-02",

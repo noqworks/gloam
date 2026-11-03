@@ -20,7 +20,9 @@ Tavan kirişleri için amber ve gün ışığı aydınlatma hattı. 3D baskı k�
 | `firmware/gloam.yaml` | ESPHome yapılandırması (pinler, efektler, kurulum penceresi) |
 | `components/noqopen_portal/` | Kurulum ağında NOQ Open kurulum ekranını sunan ESPHome bileşeni |
 | `portal/` | Kurulum ekranı kaynağı: `tokens.css` → `components.css` → `index.html` + `app.js`; `build.py` hepsini tek sayfada birleştirip `components/noqopen_portal/portal_page.h` dosyasına sıkıştırır |
-| `hardware/stl/` | Baskı dosyaları |
+| `hardware/stl/` | Baskı dosyaları, dilimlemeye hazır |
+| `hardware/step/` | Her CAD programında açılan STEP dosyaları ve güç kaynağı ile pertinaksın yerleştiği denetleyici montajı |
+| `hardware/cad/` | Her baskı parçası için düzenlenebilir CadQuery kaynakları; parametreler, vida/rakor listesi ve baskı ayarları [README'sinde](hardware/cad/README.md) |
 | `releases.json` | Sürümler ve sürüm notları; `tools/changelog.py` bundan `CHANGELOG.md` / `CHANGELOG.tr.md` üretir |
 | `docs/wiring.svg` | Bağlantı şeması |
 
@@ -28,10 +30,11 @@ Tavan kirişleri için amber ve gün ışığı aydınlatma hattı. 3D baskı k�
 
 Bileşenler, araçlar, baskı ayarları ve fotoğraflı adımlar [proje sayfasında](https://open.noq.works/tr/projeler/gloam/). Kısaca:
 
-1. Her armatür için bir gövde ve bir difüzör bas (PETG; gövde beyaz, difüzör şeffaf) ve üç parçalı denetleyici kutusu.
+1. Her armatür için bir gövde ve bir difüzör bas (PETG; gövde beyaz, difüzör şeffaf) ve iki parçalı denetleyici kutusunu (kutu ve kapak).
 2. Her gövdeye 5 cm amber ve 5 cm gün ışığı COB şerit yerleştir, artı uçları birleştir.
 3. 3 × 0,5 mm² kabloyu armatürlerden geçir: +12 V ortak, amber − ve gün ışığı − ayrı.
 4. Denetleyiciyi `docs/wiring.svg` şemasına göre kablola: D1 → ULN2003A IN1+IN2 (amber), D2 → IN3+IN4 (gün ışığı), COM → +12 V, D1 mini için 12 → 5 V düşürücü.
+5. Denetleyiciyi kapat: Mean Well LRS-75-12 köşe yuvalarına, pertinaks dört ayağına; şebeke için PG11, LED hattı için PG7 rakor; kapak dört M3 vidayla ısıl insertlere. Tam vida/rakor listesi [hardware/cad](hardware/cad/README.md) altında.
 
 ULN2003A renk başına yaklaşık 1 m COB şerit taşır. Daha uzun hatlarda her renk için bir mantık seviyeli MOSFET kullan; yazılım aynı kalır.
 

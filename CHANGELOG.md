@@ -10,13 +10,9 @@ All changes to Gloam, newest first. Versions are MAJOR.MINOR.PATCH:
 
 _Generated from `releases.json` by `tools/changelog.py`. Edit that file, not this one._
 
-## Next: 1.1.0
+## Next: 1.2.0
 
 Planned, from requests and questions. Suggest something or tell us what you hit: [issues](https://github.com/noqworks/gloam/issues).
-
-### Hardware
-
-- Editable CAD sources next to the print files.
 
 ### Firmware
 
@@ -25,6 +21,22 @@ Planned, from requests and questions. Suggest something or tell us what you hit:
 ### Documentation
 
 - A close-up photo for every build step.
+
+## 1.1.0 · 2026-11-03
+
+A new controller enclosure built around the real parts, and editable CAD sources for every printed part.
+
+### Hardware
+
+- Controller enclosure redesigned around the parts in the list: Mean Well LRS-75-12, a 50 × 70 mm perfboard, a PG11 mains gland and a PG7 LED gland on the same end wall.
+- A divider and a rib under the lid keep the mains terminals and wiring apart from the 12 V side.
+- Lid with four M3 countersunk screws in heat-set inserts, a locating lip, vents above the power supply and pads that hold it down; a USB slot for the D1 mini; two mounting ears.
+- The inner plate is gone: the perfboard sits on standoffs in the box floor.
+- Editable CAD sources (CadQuery) for every printed part, STEP files that open in any CAD program, and an assembly STEP with the power supply, perfboard and glands for checking the fit.
+- Fixture body and diffuser rebuilt as parametric models with the same dimensions; parts printed from 1.0.0 still fit.
+
+**Compatibility:** Fixtures, firmware and wiring are unchanged. The controller is a new two-part set (box and lid) that needs a PG11 and a PG7 gland, four M3 heat-set inserts, four M3 × 8 countersunk screws and four M2 × 6 screws; a controller built from 1.0.0 keeps working.
+**Files:** [source and print files (zip)](https://open.noq.works/files/gloam/gloam-1.1.0-source.zip) · [GitHub release](https://github.com/noqworks/gloam/releases/tag/v1.1.0)
 
 ## 1.0.0 · 2026-11-02
 
