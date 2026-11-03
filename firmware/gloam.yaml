@@ -4,27 +4,45 @@
 # Two 12 V COB channels (amber ~1800 K, warm white 3000 K) dimmed by one ESP8266 through a ULN2003.
 # First boot opens the "gloam-xxxxxx" setup network with the NOQopen setup page; once the device has a home network
 # it never opens that network again. Five quick power cycles (each under 10 s) reset it to factory state.
+#
+# Works on its own, no app, account or server: on the home network the device serves its own control page at
+# http://gloam-xxxxxx.local (lights, effects, schedule, power-on behaviour); a wall switch on the mains side lights it
+# with the last scene; the schedule runs on the device. Home Assistant is optional and works at the same time: both
+# drive the same lights on the device and each sees the other's changes at once.
 
 substitutions:
   name: gloam
   friendly_name: Gloam
+  version: "1.2.0"
   amber_pin: GPIO5          # D1 → ULN2003 IN1 + IN2
   warm_pin: GPIO4           # D2 → ULN2003 IN3 + IN4
   pwm_frequency: 1000 Hz
+  # Until the control page sets the home time zone (Schedule › Time zone); Home Assistant, if used, sends its own.
+  default_time_zone: "<+03>-3"
+  default_time_zone_value: "Europe/Istanbul,-10800,-10800,0,0,0,0,0,0,0,0"
+  # ESP8266 keeps saved settings in flash in the order components ask for them, and the saved Wi-Fi network sits
+  # after everything set up before Wi-Fi. Every setting added after 1.1.0 is set up after Wi-Fi (priority below 250),
+  # so an update keeps the home network. Keep it that way for anything new that remembers a value.
+  after_wifi: "100"
 
 esphome:
   name: ${name}
   friendly_name: ${friendly_name}
+  comment: NOQopen Gloam ${version}
   name_add_mac_suffix: true
   project:
     name: noqopen.gloam
-    version: "1.1.0"
+    version: ${version}
   on_boot:
     - priority: 200         # after Wi-Fi has loaded saved credentials
       then:
         - lambda: |-
             // A configured device never falls back to an open setup network.
             if (wifi::global_wifi_component->has_sta()) wifi::global_wifi_component->set_ap_timeout(0);
+    - priority: -100        # after the lights and settings are restored, before the first output write
+      then:
+        - script.execute: apply_time_zone
+        - script.execute: power_on
 
 esp8266:
   board: d1_mini
@@ -53,6 +71,22 @@ wifi:
 
 captive_portal:
 noqopen_portal:
+  panel: true               # control page at / on the home network; the setup page while the setup network is open
+
+# Local API for the control page (/events, /light/Amber/turn_on …). The page itself comes from noqopen_portal; this
+# server's own page and its log stream are not used. No firmware upload over HTTP: updates go through ESPHome OTA.
+web_server:
+  version: 3
+  log: false
+  include_internal: true    # the page also shows the device clock and whether Home Assistant is connected
+  sorting_groups:
+    - id: group_schedule
+      name: Schedule
+      sorting_weight: 10
+    - id: group_device
+      name: Device
+      sorting_weight: 20
+
 improv_serial:
 
 provisioning:
@@ -61,6 +95,103 @@ provisioning:
 factory_reset:
   resets_required: 5
   max_delay: 10s
+
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: ${default_time_zone}
+
+globals:
+  - id: last_scene          # channels that were on last: bit 0 amber, bit 1 warm white
+    type: uint8_t
+    restore_value: true
+    initial_value: "3"
+    setup_priority: ${after_wifi}
+
+script:
+  - id: remember_scene
+    then:
+      - lambda: |-
+          uint8_t m = (id(amber).remote_values.is_on() ? 1 : 0) | (id(warm_white).remote_values.is_on() ? 2 : 0);
+          if (m != 0 && m != id(last_scene)) id(last_scene) = m;
+
+  # Lights the channels of the last scene at their last brightness, rising over fade_ms.
+  - id: light_scene
+    parameters:
+      fade_ms: int
+    then:
+      - lambda: |-
+          uint8_t m = (id(last_scene) & 3) ? (id(last_scene) & 3) : 3;
+          if (m & 1) {
+            auto call = id(amber).turn_on();
+            call.set_transition_length(fade_ms);
+            call.perform();
+          }
+          if (m & 2) {
+            auto call = id(warm_white).turn_on();
+            call.set_transition_length(fade_ms);
+            call.perform();
+          }
+
+  - id: lights_off
+    parameters:
+      fade_ms: int
+    then:
+      - lambda: |-
+          auto a = id(amber).turn_off();
+          a.set_transition_length(fade_ms);
+          a.perform();
+          auto w = id(warm_white).turn_off();
+          w.set_transition_length(fade_ms);
+          w.perform();
+
+  # Power on: 0 = light up with the last scene (a wall switch works), 1 = as before the power cut, 2 = stay off.
+  - id: power_on
+    then:
+      - lambda: |-
+          auto index = id(power_on_mode).active_index();
+          size_t mode = index.has_value() ? *index : 0;
+          bool lit = id(amber).remote_values.is_on() || id(warm_white).remote_values.is_on();
+          if (mode == 0 && !lit) id(light_scene).execute(0);
+          if (mode == 2 && lit) id(lights_off).execute(0);
+
+  # Time zone text: "<IANA name>,<std offset s>,<dst offset s>,<start month>,<week>,<weekday>,<time s>,<end month>,
+  # <week>,<weekday>,<time s>"; offsets are POSIX (seconds west of UTC), month 0 = no daylight saving time.
+  # The control page writes it from the phone's time zone.
+  - id: apply_time_zone
+    then:
+      - lambda: |-
+          const std::string &s = id(time_zone).state;
+          size_t comma = s.find(',');
+          if (comma == std::string::npos) return;
+          long v[10];
+          const char *p = s.c_str() + comma;
+          for (int i = 0; i < 10; i++) {
+            if (*p != ',') return;
+            char *end;
+            v[i] = strtol(p + 1, &end, 10);
+            if (end == p + 1) return;
+            p = end;
+          }
+          if (*p != '\0') return;
+          if (labs(v[0]) > 50400 || labs(v[1]) > 50400) return;
+          time::ParsedTimezone tz{};
+          tz.std_offset_seconds = v[0];
+          tz.dst_offset_seconds = v[1];
+          if (v[2] != 0) {
+            for (int r = 0; r < 2; r++) {
+              long *q = v + 2 + r * 4;
+              if (q[0] < 1 || q[0] > 12 || q[1] < 1 || q[1] > 5 || q[2] < 0 || q[2] > 6 || labs(q[3]) > 604800) return;
+              time::DSTRule &rule = r == 0 ? tz.dst_start : tz.dst_end;
+              rule.type = time::DSTRuleType::MONTH_WEEK_DAY;
+              rule.month = q[0];
+              rule.week = q[1];
+              rule.day_of_week = q[2];
+              rule.time_seconds = q[3];
+            }
+          }
+          time::set_global_tz(tz);
+          ESP_LOGI("gloam", "Time zone: %.*s", (int) comma, s.c_str());
 
 output:
   - platform: esp8266_pwm
@@ -80,7 +211,9 @@ light:
     output: out_amber
     gamma_correct: 2.8
     default_transition_length: 0.5s
-    restore_mode: RESTORE_DEFAULT_OFF
+    restore_mode: RESTORE_DEFAULT_OFF   # power_on decides what happens next
+    on_state:
+      - script.execute: remember_scene
     effects:
       - lambda:
           name: Candle
@@ -121,6 +254,8 @@ light:
     gamma_correct: 2.8
     default_transition_length: 0.5s
     restore_mode: RESTORE_DEFAULT_OFF
+    on_state:
+      - script.execute: remember_scene
     effects:
       - lambda:
           name: Candle
@@ -151,16 +286,169 @@ light:
           min_brightness: 15%
           max_brightness: 100%
 
+# Schedule: every day at the start time the last scene rises over "Fade in" minutes (only if the lights are off);
+# at the end time they fade out. Runs on the device; the clock comes from the internet (SNTP).
+switch:
+  - platform: template
+    id: schedule
+    name: Schedule
+    icon: mdi:calendar-clock
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    setup_priority: ${after_wifi}
+    web_server:
+      sorting_group_id: group_schedule
+      sorting_weight: 1
+
+datetime:
+  - platform: template
+    id: schedule_start
+    type: time
+    name: Schedule start
+    icon: mdi:weather-sunset-down
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    setup_priority: ${after_wifi}
+    initial_value: "19:00:00"
+    time_id: sntp_time
+    on_time:
+      - if:
+          condition:
+            lambda: |-
+              return id(schedule).state && !id(amber).remote_values.is_on() && !id(warm_white).remote_values.is_on();
+          then:
+            - script.execute:
+                id: light_scene
+                fade_ms: !lambda return (int) (id(fade_in).state * 60000.0f);
+    web_server:
+      sorting_group_id: group_schedule
+      sorting_weight: 2
+  - platform: template
+    id: schedule_end
+    type: time
+    name: Schedule end
+    icon: mdi:weather-night
+    entity_category: config
+    optimistic: true
+    restore_value: true
+    setup_priority: ${after_wifi}
+    initial_value: "23:30:00"
+    time_id: sntp_time
+    on_time:
+      - if:
+          condition:
+            switch.is_on: schedule
+          then:
+            - script.execute:
+                id: lights_off
+                fade_ms: 30000
+    web_server:
+      sorting_group_id: group_schedule
+      sorting_weight: 3
+
+number:
+  - platform: template
+    id: fade_in
+    name: Fade in
+    icon: mdi:transition
+    entity_category: config
+    unit_of_measurement: min
+    mode: slider
+    min_value: 0
+    max_value: 60
+    step: 1
+    initial_value: 20
+    optimistic: true
+    restore_value: true
+    setup_priority: ${after_wifi}
+    web_server:
+      sorting_group_id: group_schedule
+      sorting_weight: 4
+
+text:
+  - platform: template
+    id: time_zone
+    name: Time zone
+    icon: mdi:earth
+    entity_category: config
+    disabled_by_default: true   # Home Assistant sends its own time zone
+    mode: text
+    max_length: 100
+    optimistic: true
+    restore_value: true
+    setup_priority: ${after_wifi}
+    initial_value: ${default_time_zone_value}
+    on_value:
+      - script.execute: apply_time_zone
+    web_server:
+      sorting_group_id: group_schedule
+      sorting_weight: 5
+
+text_sensor:
+  - platform: template
+    id: local_time
+    name: Local time
+    internal: true            # control page only
+    update_interval: 15s
+    lambda: |-
+      auto now = id(sntp_time).now();
+      if (!now.is_valid()) return std::string();
+      char buf[6];
+      snprintf(buf, sizeof(buf), "%02u:%02u", (unsigned) now.hour, (unsigned) now.minute);
+      return std::string(buf);
+    web_server:
+      sorting_group_id: group_schedule
+      sorting_weight: 6
+
+select:
+  - platform: template
+    id: power_on_mode
+    name: Power on
+    icon: mdi:power-plug-outline
+    entity_category: config
+    options:
+      - Last scene
+      - Previous state
+      - "Off"
+    initial_option: Last scene
+    optimistic: true
+    restore_value: true
+    setup_priority: ${after_wifi}
+    web_server:
+      sorting_group_id: group_device
+      sorting_weight: 1
+
+binary_sensor:
+  - platform: template
+    id: home_assistant
+    name: Home Assistant
+    internal: true            # control page only
+    lambda: return api::global_api_server != nullptr && api::global_api_server->is_connected();
+    web_server:
+      sorting_group_id: group_device
+      sorting_weight: 2
+
 sensor:
   - platform: wifi_signal
     name: Wi-Fi signal
     update_interval: 60s
     entity_category: diagnostic
+    web_server:
+      sorting_group_id: group_device
+      sorting_weight: 3
 
 button:
   - platform: restart
     name: Restart
     entity_category: diagnostic
+    web_server:
+      sorting_group_id: group_device
+      sorting_weight: 8
   - platform: factory_reset
     name: Factory reset
     entity_category: diagnostic
+    web_server:
+      sorting_group_id: group_device
+      sorting_weight: 9

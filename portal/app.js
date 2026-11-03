@@ -23,8 +23,8 @@
       doneTitle: "{p} ev ağına bağlanıyor",
       doneLede: "Bu kurulum ağı birkaç saniye içinde kapanır, telefonun ev ağına kendiliğinden döner.",
       s1: "Telefonun ya da bilgisayarın ev ağında olsun.",
-      s2: "Home Assistant'ta <b class=\"np-strong\">Ayarlar › Cihazlar ve hizmetler</b> sayfasını aç; {p} <b class=\"np-strong\">Bulunanlar</b> altında görünür.",
-      s3: "<b class=\"np-strong\">Ekle</b>'ye dokun. Işıklar ve efektler hazır.",
+      s2: "Tarayıcıda <b class=\"np-strong\">{h}.local</b> adresini aç: {p} buradan yönetilir, uygulama gerekmez. Açılmazsa modeminin cihaz listesinde {h} adının yanındaki IP adresini aç.",
+      s3: "Home Assistant kullanıyorsan <b class=\"np-strong\">Ayarlar › Cihazlar ve hizmetler</b> sayfasında {p} <b class=\"np-strong\">Bulunanlar</b> altında görünür. İkisi aynı anda çalışır.",
       retry: "Bağlanamazsa bu kurulum ağı açık kalır; şifreyi kontrol edip yeniden dene.",
       foot: "NOQopen · açık kaynak"
     },
@@ -50,18 +50,18 @@
       doneTitle: "{p} is joining your network",
       doneLede: "This setup network closes in a few seconds and your phone returns to your home network on its own.",
       s1: "Make sure your phone or computer is on your home network.",
-      s2: "In Home Assistant open <b class=\"np-strong\">Settings › Devices &amp; services</b>; {p} shows up under <b class=\"np-strong\">Discovered</b>.",
-      s3: "Tap <b class=\"np-strong\">Add</b>. Lights and effects are ready.",
+      s2: "Open <b class=\"np-strong\">{h}.local</b> in a browser: {p} is controlled from there, no app needed. If it does not open, use the IP address listed next to {h} in your router.",
+      s3: "Using Home Assistant? In <b class=\"np-strong\">Settings › Devices &amp; services</b> {p} shows up under <b class=\"np-strong\">Discovered</b>. Both work at the same time.",
       retry: "If it cannot connect, this setup network stays open; check the password and try again.",
       foot: "NOQopen · open source"
     }
   };
   var nav = (navigator.language || "en").toLowerCase();
   var lang = nav.indexOf("tr") === 0 ? "tr" : "en";
-  var s = { product: "NOQopen", id: "", aps: null, sel: null, manual: false, tries: 0, timer: 0 };
+  var s = { product: "NOQopen", id: "", host: "", aps: null, sel: null, manual: false, tries: 0, timer: 0 };
 
   function $(id) { return document.getElementById(id); }
-  function t(k) { return T[lang][k].split("{p}").join(s.product); }
+  function t(k) { return T[lang][k].split("{p}").join(s.product).split("{h}").join(esc(s.host || s.product.toLowerCase())); }
   function esc(v) {
     return String(v).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c];
@@ -126,6 +126,7 @@
       var base = m ? m[1] : name;
       s.product = base ? base.charAt(0).toUpperCase() + base.slice(1).replace(/-/g, " ") : "NOQopen";
       s.id = m ? m[2] : "";
+      s.host = name;
       document.title = s.product + " · Wi-Fi";
       var best = {};
       (d.aps || []).forEach(function (a) {

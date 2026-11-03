@@ -10,7 +10,7 @@ All changes to Gloam, newest first. Versions are MAJOR.MINOR.PATCH:
 
 _Generated from `releases.json` by `tools/changelog.py`. Edit that file, not this one._
 
-## Next: 1.2.0
+## Next: 1.3.0
 
 Planned, from requests and questions. Suggest something or tell us what you hit: [issues](https://github.com/noqworks/gloam/issues).
 
@@ -21,6 +21,25 @@ Planned, from requests and questions. Suggest something or tell us what you hit:
 ### Documentation
 
 - A close-up photo for every build step.
+
+## 1.2.0 · 2026-11-03
+
+Works without Home Assistant: the device serves its own control page, a wall switch lights it and the schedule runs on the device. Home Assistant stays optional and works at the same time.
+
+### Firmware
+
+- Control page on the device: open http://gloam-xxxxxx.local on the home network for both channels, brightness, effects, schedule and power-on behaviour. No app, account or internet needed; it can be added to the phone's home screen. (@umut)
+- Home Assistant and the control page work at the same time on the same lights; a change on one shows up on the other at once.
+- Power on: light up with the last scene (default, so a plain wall switch works), as before the power cut, or stay off.
+- Daily schedule on the device: at the on time the last scene rises over the fade-in time (20 minutes by default), at the off time it fades out. The clock comes from the internet; the time zone is taken from the phone on the control page.
+
+### Setup
+
+- The last step of the setup page shows the device's own address, with Home Assistant as the optional second step.
+
+**Compatibility:** Hardware and wiring unchanged. Update with the browser installer or ESPHome; Wi-Fi and light settings are kept (do not choose erase). After the update power coming back lights the last scene; choose "As before the power cut" on the control page for the old behaviour.
+**Thanks:** @umut (öneri: Home Assistant olmadan da çalışsın)
+**Files:** [source and print files (zip)](https://open.noq.works/files/gloam/gloam-1.2.0-source.zip) · [GitHub release](https://github.com/noqworks/gloam/releases/tag/v1.2.0)
 
 ## 1.1.0 · 2026-11-03
 

@@ -10,7 +10,7 @@ Gloam için bütün değişiklikler, en yenisi üstte. Sürümler ANA.ARA.YAMA b
 
 _`releases.json` dosyasından `tools/changelog.py` ile üretilir. Bu dosyayı değil, onu düzenle._
 
-## Sıradaki: 1.2.0
+## Sıradaki: 1.3.0
 
 Planlananlar; talep ve sorulardan. Önerin ya da takıldığın bir yer varsa: [konular](https://github.com/noqworks/gloam/issues).
 
@@ -21,6 +21,25 @@ Planlananlar; talep ve sorulardan. Önerin ya da takıldığın bir yer varsa: [
 ### Belgeler
 
 - Her yapım adımı için yakın plan fotoğraf.
+
+## 1.2.0 · 2026-11-03
+
+Home Assistant olmadan da çalışır: cihaz kendi kontrol sayfasını açar, duvar anahtarıyla yanar, zamanlama cihazda çalışır. Home Assistant isteğe bağlı kalır ve aynı anda çalışır.
+
+### Yazılım
+
+- Cihazda kontrol sayfası: ev ağında http://gloam-xxxxxx.local adresini aç; iki kanal, parlaklık, efektler, zamanlama ve elektrik gelince davranışı buradan. Uygulama, hesap ya da internet gerekmez; telefonun ana ekranına eklenebilir. (@umut)
+- Home Assistant ve kontrol sayfası aynı ışıklar üzerinde aynı anda çalışır; birinde yapılan değişiklik ötekinde hemen görünür.
+- Elektrik gelince: son sahneyle yan (varsayılan; sıradan bir duvar anahtarı çalışır), kesintiden önceki gibi ya da kapalı kal.
+- Cihazda günlük zamanlama: açılış saatinde son sahne yükseliş süresi boyunca (varsayılan 20 dakika) yükselir, kapanış saatinde söner. Saat internetten alınır; saat dilimi kontrol sayfasında telefondan alınır.
+
+### Kurulum
+
+- Kurulum ekranının son adımı cihazın kendi adresini gösterir; Home Assistant isteğe bağlı ikinci adım.
+
+**Uyumluluk:** Donanım ve bağlantılar aynı. Tarayıcıdan kurulum ya da ESPHome ile güncellenir; Wi-Fi ve ışık ayarları korunur (silme seçeneğini işaretleme). Güncellemeden sonra elektrik gelince son sahne yanar; eski davranış için kontrol sayfasında "Kesintiden önceki gibi"yi seç.
+**Teşekkürler:** @umut (öneri: Home Assistant olmadan da çalışsın)
+**Dosyalar:** [kaynak ve baskı dosyaları (zip)](https://open.noq.works/files/gloam/gloam-1.2.0-source.zip) · [GitHub sürümü](https://github.com/noqworks/gloam/releases/tag/v1.2.0)
 
 ## 1.1.0 · 2026-11-03
 

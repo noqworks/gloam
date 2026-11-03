@@ -2,7 +2,7 @@
 
 # Gloam
 
-Amber and warm white light line for ceiling beams. Small 3D-printed fixtures, two dimmable 12 V COB channels, one ESP8266 and Home Assistant. No cloud, no account.
+Amber and warm white light line for ceiling beams. Small 3D-printed fixtures, two dimmable 12 V COB channels, one ESP8266. Works on its own from a phone or a wall switch; Home Assistant is optional. No cloud, no account.
 
 **Project page, photos and browser installer:** https://open.noq.works/projects/gloam/ · [Türkçe](README.tr.md)
 
@@ -10,7 +10,9 @@ Amber and warm white light line for ceiling beams. Small 3D-printed fixtures, tw
 
 - **Amber (~1800 K) and warm white (3000 K)** in every fixture, dimmed separately or together.
 - **Effects** on the device: candle, fireplace, breathe, flicker (amber) and candle, cloud, breathe (warm white).
-- **Runs locally.** Home Assistant discovers it over ESPHome; the API key is set by Home Assistant on first connection, so no secret is baked into the firmware.
+- **Works on its own.** On your home network the device serves its own control page at `http://gloam-xxxxxx.local`: both channels, brightness, effects, a daily schedule and what happens when power comes on. No app, account or internet needed.
+- **Wall switch.** By default power coming on lights the last scene, so a plain switch on the mains side works (or choose *as before the power cut* / *stay off*).
+- **Home Assistant, optional and at the same time.** Home Assistant discovers it over ESPHome; the API key is set by Home Assistant on first connection, so no secret is baked into the firmware. The control page keeps working next to it; both see each other's changes at once.
 - **Its own setup screen.** On first boot it opens a `gloam-xxxxxx` network with the NOQ Open Wi-Fi setup page. Once it has joined your network it never opens that network again.
 
 ## Repository
@@ -18,8 +20,8 @@ Amber and warm white light line for ceiling beams. Small 3D-printed fixtures, tw
 | Path | Contents |
 |---|---|
 | `firmware/gloam.yaml` | ESPHome configuration (pins, effects, provisioning) |
-| `components/noqopen_portal/` | ESPHome external component that serves the NOQ Open setup page on the captive portal |
-| `portal/` | Setup page source: `tokens.css` → `components.css` → `index.html` + `app.js`; `build.py` inlines and gzips it into `components/noqopen_portal/portal_page.h` |
+| `components/noqopen_portal/` | ESPHome external component: the NOQ Open setup page on the captive portal and the control page on the home network |
+| `portal/` | Page sources: `tokens.css` → `components.css` → setup page `index.html` + `app.js`, control page `panel.html` + `panel.css` + `panel.js`; `build.py` inlines and gzips them into `components/noqopen_portal/portal_page.h` and `panel_page.h` |
 | `hardware/stl/` | Print files, ready to slice |
 | `hardware/step/` | STEP files for any CAD program, plus a controller assembly with the power supply and perfboard |
 | `hardware/cad/` | Editable CadQuery sources for every printed part; parameters, hardware and print settings in [its README](hardware/cad/README.md) |
@@ -40,7 +42,7 @@ The ULN2003A carries about 1 m of COB strip per colour. For longer lines use one
 
 ## Firmware
 
-**Browser:** open https://open.noq.works/install/gloam/ in Chrome or Edge on a desktop. The setup wizard flashes the board over USB, joins Wi-Fi and hands over to Home Assistant.
+**Browser:** open https://open.noq.works/install/gloam/ in Chrome or Edge on a desktop. The setup wizard flashes the board over USB and joins Wi-Fi; then open `http://gloam-xxxxxx.local` (or add it to Home Assistant).
 
 **ESPHome:** adopt the device in ESPHome Builder (it is announced with `dashboard_import`), or build it yourself:
 
@@ -50,13 +52,13 @@ esphome run firmware/gloam.yaml
 
 Change pins or PWM frequency with the `substitutions` at the top of the file.
 
-**Setup page:** edit files in `portal/`, then run `python3 portal/build.py` and rebuild the firmware.
+**Setup and control pages:** edit files in `portal/` (`index.html` + `app.js` setup page, `panel.html` + `panel.js` + `panel.css` control page), then run `python3 portal/build.py` and rebuild the firmware. The control page talks to the stock ESPHome web server API (`/events`, `/light/Amber/turn_on`, …).
 
 ### Setup and reset
 
 - Unconfigured: the device opens `gloam-xxxxxx` and keeps it open for 30 minutes (provisioning window). Power-cycle to reopen.
 - Configured: no setup network, ever. Wi-Fi can still be changed over USB (Improv serial).
-- Factory reset: cut and restore power 5 times, each within 10 seconds, or press *Factory reset* in Home Assistant.
+- Factory reset: cut and restore power 5 times, each within 10 seconds, or use *Reset to factory settings* on the control page (or *Factory reset* in Home Assistant).
 
 ## Versions
 
