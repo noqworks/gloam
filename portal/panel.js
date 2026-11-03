@@ -24,7 +24,19 @@
       restarting: "Yeniden başlıyor…",
       resetting: "Sıfırlanıyor. Cihaz kurulum ağını yeniden açar.",
       version: "Yazılım {v}",
-      foot: "NOQopen · açık kaynak"
+      foot: "NOQopen · açık kaynak",
+      homeKicker: "Ana ekrana ekle",
+      homeTitle: "Her seferinde adres yazma: bir dokunuşla aç",
+      homeIos: ["Safari'de <b class=\"np-strong\">Paylaş</b> {share} düğmesine dokun (iOS 26'da önce <b class=\"np-strong\">⋯</b>).",
+        "<b class=\"np-strong\">Ana Ekrana Ekle</b>'yi seç, sonra <b class=\"np-strong\">Ekle</b>'ye dokun.",
+        "Simgesi ana ekrana gelir; uygulama gibi tam ekran açılır. İndirmen gereken bir şey yok."],
+      homeAndroid: ["Chrome'da sağ üstteki <b class=\"np-strong\">⋮</b> menüsüne dokun.",
+        "<b class=\"np-strong\">Ana ekrana ekle</b>'yi seç, sonra <b class=\"np-strong\">Ekle</b>'ye dokun.",
+        "Simgesi ana ekrana gelir; bir dokunuşla açılır. İndirmen gereken bir şey yok."],
+      homeDesk: ["Telefonunu ev ağına bağla.",
+        "Tarayıcıda <b class=\"np-strong\">{host}</b> adresini aç.",
+        "Sayfadaki adımlarla ana ekrana ekle; bir dokunuşla açılır."],
+      homeDone: "Tamam, gizle"
     },
     en: {
       kicker: "Running on the device",
@@ -45,7 +57,19 @@
       restarting: "Restarting…",
       resetting: "Resetting. The device opens its setup network again.",
       version: "Firmware {v}",
-      foot: "NOQopen · open source"
+      foot: "NOQopen · open source",
+      homeKicker: "Add to home screen",
+      homeTitle: "Skip the address: open it with one tap",
+      homeIos: ["In Safari tap <b class=\"np-strong\">Share</b> {share} (on iOS 26, tap <b class=\"np-strong\">⋯</b> first).",
+        "Choose <b class=\"np-strong\">Add to Home Screen</b>, then tap <b class=\"np-strong\">Add</b>.",
+        "Its icon lands on your home screen and opens full screen like an app. Nothing to download."],
+      homeAndroid: ["In Chrome tap the <b class=\"np-strong\">⋮</b> menu at the top right.",
+        "Choose <b class=\"np-strong\">Add to home screen</b>, then tap <b class=\"np-strong\">Add</b>.",
+        "Its icon lands on your home screen and opens with one tap. Nothing to download."],
+      homeDesk: ["Connect your phone to your home network.",
+        "Open <b class=\"np-strong\">{host}</b> in its browser.",
+        "Follow the steps on the page to add it to the home screen."],
+      homeDone: "Got it, hide"
     }
   };
   // Names, options and effects as the firmware spells them; anything missing is shown as is.
@@ -484,11 +508,34 @@
     if (e && built[id]) built[id].set(e, quiet);
   }
 
+  // Add to home screen: shown until dismissed, never inside the home screen app itself.
+  var UA = navigator.userAgent || "";
+  var IOS = /iPhone|iPad|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  var ANDROID = /Android/.test(UA);
+  var SHARE = "<svg class=\"np-inline\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 3v12M8 7l4-4 4 4\"/><path d=\"M7 11H6v10h12V11h-1\"/></svg>";
+  function homeHidden() {
+    var app = window.navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+    var seen = false;
+    try { seen = localStorage.getItem("np-home") === "1"; } catch (x) { seen = false; }
+    return app || seen;
+  }
+  function homeGuide() {
+    var card = $("home");
+    card.hidden = homeHidden();
+    if (card.hidden) return;
+    var steps = IOS ? T[lang].homeIos : ANDROID ? T[lang].homeAndroid : T[lang].homeDesk;
+    var host = esc(location.host || "");
+    $("home-steps").innerHTML = steps.map(function (s) {
+      return "<li><span>" + s.split("{share}").join(SHARE).split("{host}").join(host) + "</span></li>";
+    }).join("");
+  }
+
   function hero() {
     var m = info.title.match(/^(.*?)[ -]([0-9a-f]{6})$/);
     var base = m ? m[1] : info.title;
     $("h-device").textContent = base || "NOQopen";
     document.title = (base || "NOQopen");
+    $("app-title").setAttribute("content", base || "NOQopen");
     $("chip-host").textContent = location.host || info.title;
     var ha = E["binary_sensor/Home Assistant"];
     $("chip-ha").hidden = !ha;
@@ -510,6 +557,7 @@
     for (var i = 0; i < els.length; i++) els[i].textContent = t(els[i].getAttribute("data-t"));
     var b = document.querySelectorAll("[data-lang]");
     for (var j = 0; j < b.length; j++) b[j].setAttribute("aria-current", b[j].getAttribute("data-lang") === lang ? "true" : "false");
+    homeGuide();
     $("lights").innerHTML = ""; $("groups").innerHTML = "";
     built = {}; cards = {};
     if (!ready) status(t("connecting"));
@@ -552,6 +600,11 @@
     };
   }
   setInterval(function () { if (es && Date.now() - seen > 25000) { if (!gone) status(t("lost")); connect(); } }, 5000);
+
+  $("home-done").addEventListener("click", function () {
+    try { localStorage.setItem("np-home", "1"); } catch (x) { /* private mode: hidden until reload */ }
+    $("home").hidden = true;
+  });
 
   document.addEventListener("click", function (ev) {
     var b = ev.target.closest ? ev.target.closest("[data-lang]") : null;

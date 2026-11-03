@@ -21,6 +21,36 @@
   },
   "releases": [
     {
+      "version": "1.2.1",
+      "date": "2026-11-03",
+      "summary": {
+        "en": "The control page goes on your phone's home screen like an app, and shows how to put it there.",
+        "tr": "Kontrol sayfası telefonun ana ekranına uygulama gibi eklenir ve nasıl ekleneceğini kendisi gösterir."
+      },
+      "changes": [
+        {
+          "area": "firmware",
+          "en": "Added to the home screen, the control page shows the NOQ Open icon and the device's name and opens full screen (iPhone and Android).",
+          "tr": "Ana ekrana eklenen kontrol sayfası NOQ Open simgesi ve cihazın adıyla görünür, tam ekran açılır (iPhone ve Android)."
+        },
+        {
+          "area": "firmware",
+          "en": "On first visit the control page shows, step by step for the phone in hand, how to add it to the home screen; once hidden it stays hidden.",
+          "tr": "Kontrol sayfası ilk açılışta, kullanılan telefona göre ana ekrana eklemeyi adım adım gösterir; gizlenince bir daha çıkmaz."
+        },
+        {
+          "area": "setup",
+          "en": "The last step of the setup page mentions adding the control page to the home screen.",
+          "tr": "Kurulum ekranının son adımı kontrol sayfasını ana ekrana eklemeyi de anlatır."
+        }
+      ],
+      "compatibility": {
+        "en": "Hardware, wiring and settings unchanged; updating from 1.2.0 keeps Wi-Fi and all settings.",
+        "tr": "Donanım, bağlantılar ve ayarlar aynı; 1.2.0'dan güncellemede Wi-Fi ve bütün ayarlar korunur."
+      },
+      "credits": []
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-03",
       "summary": {

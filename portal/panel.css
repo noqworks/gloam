@@ -48,6 +48,12 @@
 .np-pill[aria-pressed="true"] { border-color: var(--ms-accent); background: var(--ms-accent); color: var(--ms-on-accent);
   font-weight: var(--ms-weight-strong); }
 
+/* add-to-home-screen guide: inline icons inside the step text */
+.np-inline { display: inline-block; width: calc(var(--ms-space-unit) * 4.5); height: calc(var(--ms-space-unit) * 4.5);
+  margin: 0 calc(var(--ms-space-unit) * 0.5); vertical-align: text-bottom; fill: none; stroke: var(--ms-fg); stroke-width: 1.75;
+  stroke-linecap: round; stroke-linejoin: round; }
+.np-steps .np-strong { white-space: nowrap; }
+
 /* settings rows */
 .np-rows { display: grid; grid-template-columns: minmax(0, 1fr); }
 .np-set { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: calc(var(--ms-space-unit) * 3);

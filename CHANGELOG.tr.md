@@ -22,6 +22,22 @@ Planlananlar; talep ve sorulardan. Önerin ya da takıldığın bir yer varsa: [
 
 - Her yapım adımı için yakın plan fotoğraf.
 
+## 1.2.1 · 2026-11-03
+
+Kontrol sayfası telefonun ana ekranına uygulama gibi eklenir ve nasıl ekleneceğini kendisi gösterir.
+
+### Yazılım
+
+- Ana ekrana eklenen kontrol sayfası NOQ Open simgesi ve cihazın adıyla görünür, tam ekran açılır (iPhone ve Android).
+- Kontrol sayfası ilk açılışta, kullanılan telefona göre ana ekrana eklemeyi adım adım gösterir; gizlenince bir daha çıkmaz.
+
+### Kurulum
+
+- Kurulum ekranının son adımı kontrol sayfasını ana ekrana eklemeyi de anlatır.
+
+**Uyumluluk:** Donanım, bağlantılar ve ayarlar aynı; 1.2.0'dan güncellemede Wi-Fi ve bütün ayarlar korunur.
+**Dosyalar:** [kaynak ve baskı dosyaları (zip)](https://open.noq.works/files/gloam/gloam-1.2.1-source.zip) · [GitHub sürümü](https://github.com/noqworks/gloam/releases/tag/v1.2.1)
+
 ## 1.2.0 · 2026-11-03
 
 Home Assistant olmadan da çalışır: cihaz kendi kontrol sayfasını açar, duvar anahtarıyla yanar, zamanlama cihazda çalışır. Home Assistant isteğe bağlı kalır ve aynı anda çalışır.

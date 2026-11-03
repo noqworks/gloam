@@ -3,6 +3,7 @@
 
 Setup page (Wi-Fi):   index.html + tokens.css + components.css + app.js + logo.svg -> portal_page.h (PAGE_GZ)
 Control page:         panel.html + tokens.css + components.css + panel.css + panel.js + logo.svg -> panel_page.h (PANEL_GZ)
+Home screen icon:     icon.png (192 × 192, the NOQopen mark) -> icon_png.h (ICON_PNG), served at /icon.png
 
 Each page is inlined into one HTML file, gzipped and written as a C header. Run after editing anything in portal/:
 
@@ -72,6 +73,10 @@ def header(data: bytes, symbol: str) -> str:
     )
 
 
+def icon_header(data: bytes) -> str:
+    return header(data, "ICON_PNG").replace("Do not edit; change portal/ and rebuild.", "Do not edit; replace portal/icon.png and rebuild.")
+
+
 def committed(out: pathlib.Path) -> str:
     if not out.exists():
         return ""
@@ -95,6 +100,14 @@ def main() -> None:
             target.mkdir(parents=True, exist_ok=True)
             (target / html_name).write_text(html, encoding="utf-8")
         print(f"{html_name}: {len(html)} bytes html, {len(data)} bytes gzip -> {out.relative_to(ROOT.parent)}")
+    icon = (ROOT / "icon.png").read_bytes()
+    icon_out = COMPONENT / "icon_png.h"
+    if "--check" in sys.argv:
+        if not icon_out.exists() or icon_out.read_text(encoding="utf-8") != icon_header(icon):
+            stale.append("icon_png.h")
+    else:
+        icon_out.write_text(icon_header(icon), encoding="utf-8")
+        print(f"icon.png: {len(icon)} bytes -> {icon_out.relative_to(ROOT.parent)}")
     if "--check" in sys.argv:
         if stale:
             sys.exit(f"{', '.join(stale)} out of date: run python3 portal/build.py and commit")

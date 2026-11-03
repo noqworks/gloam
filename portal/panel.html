@@ -8,6 +8,10 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="NOQopen" id="app-title">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
 <title>NOQopen</title>
 <style>/*CSS*/</style>
 </head>
@@ -31,6 +35,14 @@
       <span class="np-chip" id="chip-ha" hidden></span>
     </div>
     <p class="np-small" id="status" role="status" aria-live="polite"></p>
+  </section>
+  <section class="np-card" id="home" hidden aria-labelledby="h-home">
+    <div class="np-stack">
+      <p class="np-kicker" data-t="homeKicker"></p>
+      <h2 class="np-h" id="h-home" data-t="homeTitle"></h2>
+    </div>
+    <ol class="np-steps" id="home-steps"></ol>
+    <div><button type="button" class="np-link" id="home-done" data-t="homeDone"></button></div>
   </section>
   <div class="np-col" id="lights"></div>
   <div class="np-col" id="groups"></div>

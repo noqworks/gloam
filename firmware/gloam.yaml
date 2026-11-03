@@ -13,7 +13,7 @@
 substitutions:
   name: gloam
   friendly_name: Gloam
-  version: "1.2.0"
+  version: "1.2.1"
   amber_pin: GPIO5          # D1 → ULN2003 IN1 + IN2
   warm_pin: GPIO4           # D2 → ULN2003 IN3 + IN4
   pwm_frequency: 1000 Hz

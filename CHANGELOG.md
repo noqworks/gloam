@@ -22,6 +22,22 @@ Planned, from requests and questions. Suggest something or tell us what you hit:
 
 - A close-up photo for every build step.
 
+## 1.2.1 · 2026-11-03
+
+The control page goes on your phone's home screen like an app, and shows how to put it there.
+
+### Firmware
+
+- Added to the home screen, the control page shows the NOQ Open icon and the device's name and opens full screen (iPhone and Android).
+- On first visit the control page shows, step by step for the phone in hand, how to add it to the home screen; once hidden it stays hidden.
+
+### Setup
+
+- The last step of the setup page mentions adding the control page to the home screen.
+
+**Compatibility:** Hardware, wiring and settings unchanged; updating from 1.2.0 keeps Wi-Fi and all settings.
+**Files:** [source and print files (zip)](https://open.noq.works/files/gloam/gloam-1.2.1-source.zip) · [GitHub release](https://github.com/noqworks/gloam/releases/tag/v1.2.1)
+
 ## 1.2.0 · 2026-11-03
 
 Works without Home Assistant: the device serves its own control page, a wall switch lights it and the schedule runs on the device. Home Assistant stays optional and works at the same time.

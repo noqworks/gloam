@@ -23,7 +23,7 @@
       doneTitle: "{p} ev ağına bağlanıyor",
       doneLede: "Bu kurulum ağı birkaç saniye içinde kapanır, telefonun ev ağına kendiliğinden döner.",
       s1: "Telefonun ya da bilgisayarın ev ağında olsun.",
-      s2: "Tarayıcıda <b class=\"np-strong\">{h}.local</b> adresini aç: {p} buradan yönetilir, uygulama gerekmez. Açılmazsa modeminin cihaz listesinde {h} adının yanındaki IP adresini aç.",
+      s2: "Tarayıcıda <b class=\"np-strong\">{h}.local</b> adresini aç: {p} buradan yönetilir, uygulama gerekmez. Açılmazsa modeminin cihaz listesinde {h} adının yanındaki IP adresini aç. Sayfa, ana ekrana nasıl ekleneceğini gösterir.",
       s3: "Home Assistant kullanıyorsan <b class=\"np-strong\">Ayarlar › Cihazlar ve hizmetler</b> sayfasında {p} <b class=\"np-strong\">Bulunanlar</b> altında görünür. İkisi aynı anda çalışır.",
       retry: "Bağlanamazsa bu kurulum ağı açık kalır; şifreyi kontrol edip yeniden dene.",
       foot: "NOQopen · açık kaynak"
@@ -50,7 +50,7 @@
       doneTitle: "{p} is joining your network",
       doneLede: "This setup network closes in a few seconds and your phone returns to your home network on its own.",
       s1: "Make sure your phone or computer is on your home network.",
-      s2: "Open <b class=\"np-strong\">{h}.local</b> in a browser: {p} is controlled from there, no app needed. If it does not open, use the IP address listed next to {h} in your router.",
+      s2: "Open <b class=\"np-strong\">{h}.local</b> in a browser: {p} is controlled from there, no app needed. If it does not open, use the IP address listed next to {h} in your router. The page shows how to add it to your home screen.",
       s3: "Using Home Assistant? In <b class=\"np-strong\">Settings › Devices &amp; services</b> {p} shows up under <b class=\"np-strong\">Discovered</b>. Both work at the same time.",
       retry: "If it cannot connect, this setup network stays open; check the password and try again.",
       foot: "NOQopen · open source"
