@@ -79,6 +79,10 @@ PETG, 0.4 mm nozzle, 0.2 mm layers, no supports.
 | Controller box | floor down | 6 walls (2.4 mm), 30 % infill |
 | Controller lid | top face down (as exported) | |
 
+Ready-made Bambu Studio projects with these settings are in `../3mf`: sliced for the Bambu Lab A1 (0.4 mm nozzle, textured PEI plate,
+Bambu PETG HF and PETG Translucent), one filament per plate. About 15 minutes per body, 13 per diffuser, 2 h 40 min for
+the box and 1 h 15 min for the lid on the A1; Bambu Studio converts the projects for other printers.
+
 The holes in the walls have a 45° roof so they print without support. Press the inserts in with a soldering iron at
 about 230 °C.
 
