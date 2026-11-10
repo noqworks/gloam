@@ -1,0 +1,146 @@
+{
+  "ad": "gloam-controller",
+  "birim": "mm",
+  "gruplar": {
+    "psu": {
+      "tr": "Güç kaynağı",
+      "en": "Power supply"
+    },
+    "board": {
+      "tr": "Delikli kart (pertinaks)",
+      "en": "Perfboard"
+    },
+    "extra": {
+      "tr": "Ek bileşen",
+      "en": "Extra component"
+    }
+  },
+  "parametreler": {
+    "psu_x": {
+      "grup": "psu",
+      "min": 60.0,
+      "max": 200.0,
+      "varsayilan": 99.0,
+      "ad": {
+        "tr": "Derinlik",
+        "en": "Depth"
+      },
+      "aciklama": {
+        "tr": "Vidalı klemens tarafından arka kenara.",
+        "en": "From the terminal side to the back."
+      }
+    },
+    "psu_y": {
+      "grup": "psu",
+      "min": 50.0,
+      "max": 150.0,
+      "varsayilan": 97.0,
+      "ad": {
+        "tr": "Genişlik",
+        "en": "Width"
+      },
+      "aciklama": {
+        "tr": "Klemens sırası boyunca.",
+        "en": "Along the row of terminals."
+      }
+    },
+    "psu_h": {
+      "grup": "psu",
+      "min": 22.0,
+      "max": 60.0,
+      "varsayilan": 30.0,
+      "ad": {
+        "tr": "Yükseklik",
+        "en": "Height"
+      },
+      "aciklama": {
+        "tr": "",
+        "en": ""
+      }
+    },
+    "psu_divider": {
+      "grup": "psu",
+      "min": 10.0,
+      "max": 140.0,
+      "varsayilan": 57.55,
+      "ad": {
+        "tr": "Ayraç konumu",
+        "en": "Divider position"
+      },
+      "aciklama": {
+        "tr": "Kart tarafındaki kenardan, FG ile −V vidalarının arası. Şebeke ile 12 V kablolarını ayırır.",
+        "en": "From the edge nearest the board, between the FG and −V screws. Keeps mains and 12 V wires apart."
+      }
+    },
+    "board_x": {
+      "grup": "board",
+      "min": 67.0,
+      "max": 160.0,
+      "varsayilan": 70.0,
+      "ad": {
+        "tr": "Uzun kenar",
+        "en": "Long side"
+      },
+      "aciklama": {
+        "tr": "Gloam devresi en az 67 × 47 mm ister.",
+        "en": "The Gloam circuit needs at least 67 × 47 mm."
+      }
+    },
+    "board_y": {
+      "grup": "board",
+      "min": 47.0,
+      "max": 120.0,
+      "varsayilan": 50.0,
+      "ad": {
+        "tr": "Kısa kenar",
+        "en": "Short side"
+      },
+      "aciklama": {
+        "tr": "",
+        "en": ""
+      }
+    },
+    "extra_x": {
+      "grup": "extra",
+      "min": 0.0,
+      "max": 120.0,
+      "varsayilan": 0.0,
+      "ad": {
+        "tr": "En",
+        "en": "Length"
+      },
+      "aciklama": {
+        "tr": "Kartın yanında tabana oturur, köşe tutucularla yerinde kalır. Yoksa 0.",
+        "en": "Stands on the floor next to the board, held by corner stops. 0 if none."
+      }
+    },
+    "extra_y": {
+      "grup": "extra",
+      "min": 0.0,
+      "max": 120.0,
+      "varsayilan": 0.0,
+      "ad": {
+        "tr": "Boy",
+        "en": "Width"
+      },
+      "aciklama": {
+        "tr": "",
+        "en": ""
+      }
+    },
+    "extra_h": {
+      "grup": "extra",
+      "min": 0.0,
+      "max": 50.0,
+      "varsayilan": 0.0,
+      "ad": {
+        "tr": "Yükseklik",
+        "en": "Height"
+      },
+      "aciklama": {
+        "tr": "",
+        "en": ""
+      }
+    }
+  }
+}

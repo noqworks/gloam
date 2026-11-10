@@ -18,6 +18,32 @@ python3 gloam_controller.py    # controller box + lid + assembly, prints a fit c
 `controller-assembly.step` places the box, the lid and simple stand-ins for the power supply, the perfboard, the modules
 and the cable glands, so you can check the fit before printing. `gloam_controller.py` reports any overlap between them.
 
+### Your own parts
+
+The controller box follows the parts you put in it. Change the power supply, the perfboard or add one extra module that
+stands on the floor next to the board, and the walls, gland holes, mains divider, screw columns, lid pads and vents are laid
+out again. The same parameters drive the box designer on the [project page](https://open.noq.works/projects/gloam/#kutu-tasarla),
+which previews the box in 3D and gives you the STL and STEP files.
+
+```sh
+python3 gloam_controller.py --params                                   # names, ranges and defaults (JSON)
+python3 gloam_controller.py --set psu_x=129 --out /tmp/box             # a box for an LRS-100-12
+python3 gloam_controller.py --set board_x=80 --set board_y=60 \
+    --set extra_x=30 --set extra_y=40 --set extra_h=20 --out /tmp/box  # bigger board and a 30 × 40 × 20 mm module
+```
+
+| Parameter | Default | Range (mm) | |
+|---|---|---|---|
+| `psu_x`, `psu_y`, `psu_h` | 99, 97, 30 | 60–200, 50–150, 22–60 | power supply depth (terminal side to back), width (along the terminals), height |
+| `psu_divider` | 57.55 | 10–140 | mains divider from the PSU edge nearest the board, between the FG and −V screws |
+| `board_x`, `board_y` | 70, 50 | 67–160, 47–120 | perfboard; the Gloam circuit needs at least 67 × 47 mm |
+| `extra_x`, `extra_y`, `extra_h` | 0 | 0–120, 0–120, 0–50 | extra module next to the board, held by corner stops (0 = none) |
+
+The defaults give exactly the files in `../stl` and `../step`. The script stops with a message when a choice cannot work
+(the divider outside the power supply, a gland that no longer fits on its side of the divider, a box too low for the mains
+gland) and warns when the box is larger than a print bed. `gloam-controller.params.json` is the same list as `--params`;
+regenerate it when you change `PARAMETRELER`.
+
 ![Controller layout](images/plan.png)
 
 ## Fixture
