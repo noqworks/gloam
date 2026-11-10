@@ -146,9 +146,9 @@ VARSAYILAN = {k: float(globals()[v["hedef"]]) for k, v in PARAMETRELER.items()}
 
 
 class ParametreHatasi(ValueError):
-    def __init__(self, kod: str, tr: str, en: str):
+    def __init__(self, kod: str, tr: str, en: str, alan: str | None = None):
         super().__init__(en)
-        self.kod, self.tr, self.en = kod, tr, en
+        self.kod, self.tr, self.en, self.alan = kod, tr, en, alan   # alan: düzeltilecek parametre (form o alanı işaretler)
 
 
 def _extra() -> bool:
@@ -187,16 +187,16 @@ def _check() -> list[dict]:
     m, led = GLANDS["mains"], GLANDS["led"]
     if not 10.0 <= PSU_DIVIDER <= PSU_Y - 10.0:
         raise ParametreHatasi("ayrac", "Ayraç güç kaynağının içinde olmalı (kenarlardan en az 10 mm).",
-                              "The divider must be within the power supply (at least 10 mm from its edges).")
+                              "The divider must be within the power supply (at least 10 mm from its edges).", "psu_divider")
     if GLAND_MAINS_Y - m["nut"] / 2 < DIVIDER_Y + DIVIDER_T / 2 + 1.0:
         raise ParametreHatasi("ayrac_rakor", "Şebeke rakoru ayracın şebeke tarafına sığmıyor: ayracı kart tarafına yaklaştırın.",
-                              "The mains gland does not fit on the mains side of the divider: move the divider towards the board.")
+                              "The mains gland does not fit on the mains side of the divider: move the divider towards the board.", "psu_divider")
     if GLAND_LED_Y + led["nut"] / 2 > DIVIDER_Y - DIVIDER_T / 2 - 1.0:
         raise ParametreHatasi("led_rakor", "LED rakoru ayracın 12 V tarafına sığmıyor: ayracı kart tarafından uzaklaştırın.",
-                              "The LED gland does not fit on the 12 V side of the divider: move the divider away from the board.")
+                              "The LED gland does not fit on the 12 V side of the divider: move the divider away from the board.", "psu_divider")
     if GLAND_Z + m["body"] / 2 > BOX_H - 0.5:
         raise ParametreHatasi("alcak", "Kutu şebeke rakoru için çok alçak; güç kaynağı yüksekliği en az 22 mm olmalı.",
-                              "The box is too low for the mains gland; the power supply must be at least 22 mm tall.")
+                              "The box is too low for the mains gland; the power supply must be at least 22 mm tall.", "psu_h")
     uyari = []
     dis = (XI + 2 * WALL, YI + 2 * WALL + 2 * EAR_OUT, BOX_H)
     for ad, tabla in (("A1 mini", 180.0), ("A1 · P1 · X1", 256.0)):
@@ -210,15 +210,15 @@ def configure(degerler: dict | None = None) -> list[dict]:
     d = dict(VARSAYILAN)
     for k, v in (degerler or {}).items():
         if k not in PARAMETRELER:
-            raise ParametreHatasi("bilinmeyen", f"Bilinmeyen parametre: {k}", f"Unknown parameter: {k}")
+            raise ParametreHatasi("bilinmeyen", f"Bilinmeyen parametre: {k}", f"Unknown parameter: {k}", k)
         try:
             x = float(v)
         except (TypeError, ValueError):
-            raise ParametreHatasi("sayi", f"{k}: sayı olmalı.", f"{k}: must be a number.") from None
+            raise ParametreHatasi("sayi", f"{k}: sayı olmalı.", f"{k}: must be a number.", k) from None
         p = PARAMETRELER[k]
         if not (p["min"] <= x <= p["max"]) and not (p["grup"] == "extra" and x == 0):
             raise ParametreHatasi("aralik", f"{p['ad']['tr']}: {p['min']:g}–{p['max']:g} mm olmalı.",
-                                  f"{p['ad']['en']}: must be {p['min']:g}–{p['max']:g} mm.")
+                                  f"{p['ad']['en']}: must be {p['min']:g}–{p['max']:g} mm.", k)
         d[k] = round(x, 2)
     for k, v in d.items():
         globals()[PARAMETRELER[k]["hedef"]] = v
@@ -470,7 +470,7 @@ def main(argv: list[str] | None = None) -> int:
         uyari = configure(deg)
     except ParametreHatasi as e:
         if a.report:
-            pathlib.Path(a.report).write_text(json.dumps({"ok": False, "kod": e.kod, "tr": e.tr, "en": e.en}, ensure_ascii=False))
+            pathlib.Path(a.report).write_text(json.dumps({"ok": False, "kod": e.kod, "tr": e.tr, "en": e.en, "alan": e.alan}, ensure_ascii=False))
         print(f"error: {e.en}", file=sys.stderr)
         return 2
     hw = pathlib.Path(a.out) if a.out else pathlib.Path(__file__).resolve().parent.parent
