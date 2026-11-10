@@ -22,7 +22,7 @@ Amber and warm white light line for ceiling beams. Small 3D-printed fixtures, tw
 | `firmware/gloam.yaml` | ESPHome configuration (pins, effects, provisioning) |
 | `components/noqopen_portal/` | ESPHome external component: the NOQ Open setup page on the captive portal and the control page on the home network |
 | `portal/` | Page sources: `tokens.css` → `components.css` → setup page `index.html` + `app.js`, control page `panel.html` + `panel.css` + `panel.js`; `build.py` inlines and gzips them into `components/noqopen_portal/portal_page.h` and `panel_page.h` |
-| `hardware/3mf/` | Bambu Studio print projects for the Bambu Lab A1 (0.4 mm nozzle), sliced and ready to print: `gloam-fixture-a1.3mf` (16 bodies and 16 diffusers on four plates), `gloam-controller-a1.3mf` (box and lid). Bambu Studio converts them for other printers |
+| `hardware/3mf/` | `gloam-a1.3mf`: the whole set as one Bambu Studio project for the Bambu Lab A1 (0.4 mm nozzle), sliced and ready to print: 16 bodies, 16 diffusers, the controller box and its lid on six plates. Bambu Studio converts it for other printers |
 | `hardware/stl/` | Print files, ready to slice |
 | `hardware/step/` | STEP files for any CAD program, plus a controller assembly with the power supply and perfboard |
 | `hardware/cad/` | Editable CadQuery sources for every printed part; parameters, hardware and print settings in [its README](hardware/cad/README.md) |

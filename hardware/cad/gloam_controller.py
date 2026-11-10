@@ -70,7 +70,7 @@ PAD_D = 7.0                                  # pads under the lid that hold the 
 PAD_PRESS = 0.2                              # interference on the PSU top
 
 # ── USB access to the D1 mini ───────────────────────────────────────────────────────────────────────────
-USB_SLOT = (12.0, 8.0)    # width, height (fits a micro-USB plug)
+USB_SLOT = (13.0, 8.0)    # width, height: micro-USB and USB-C plug bodies (USB-C overmoulds up to ~12.4 × 6.5)
 
 # ── vents ───────────────────────────────────────────────────────────────────────────────────────────────
 VENT_W = 2.0              # slot width: keeps fingers and tools out

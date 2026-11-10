@@ -22,7 +22,7 @@ Tavan kirişleri için amber ve gün ışığı aydınlatma hattı. 3D baskı k�
 | `firmware/gloam.yaml` | ESPHome yapılandırması (pinler, efektler, zamanlama, kurulum penceresi) |
 | `components/noqopen_portal/` | ESPHome bileşeni: kurulum ağında NOQ Open kurulum ekranı, ev ağında kontrol sayfası |
 | `portal/` | Sayfa kaynakları: `tokens.css` → `components.css` → kurulum `index.html` + `app.js`, kontrol `panel.html` + `panel.css` + `panel.js`; `build.py` her birini tek sayfada birleştirip `components/noqopen_portal/portal_page.h` ve `panel_page.h` dosyalarına sıkıştırır |
-| `hardware/3mf/` | Bambu Lab A1 (0,4 mm nozul) için dilimlenmiş, basılmaya hazır Bambu Studio projeleri: `gloam-fixture-a1.3mf` (dört plakada 16 gövde ve 16 difüzör), `gloam-controller-a1.3mf` (kutu ve kapak). Bambu Studio başka yazıcılar için dönüştürür |
+| `hardware/3mf/` | `gloam-a1.3mf`: takımın tamamı tek Bambu Studio projesinde, Bambu Lab A1 (0,4 mm nozul) için dilimlenmiş ve basılmaya hazır: altı plakada 16 gövde, 16 difüzör, denetleyici kutusu ve kapağı. Bambu Studio başka yazıcılar için dönüştürür |
 | `hardware/stl/` | Baskı dosyaları, dilimlemeye hazır |
 | `hardware/step/` | Her CAD programında açılan STEP dosyaları ve güç kaynağı ile pertinaksın yerleştiği denetleyici montajı |
 | `hardware/cad/` | Her baskı parçası için düzenlenebilir CadQuery kaynakları; parametreler, vida/rakor listesi ve baskı ayarları [README'sinde](hardware/cad/README.md) |

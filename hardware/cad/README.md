@@ -25,7 +25,7 @@ and the cable glands, so you can check the fit before printing. `gloam_controlle
 ![Fixture body, diffuser and the cable arch](images/fixture.png)
 
 A stadium-shaped body (27.4 × 89.9 × 15.8 mm) with two 8 mm COB strips between low ribs, two countersunk screws through
-the floor and a cable arch (7.5 mm wide, 7 mm high) at both ends for round ~6 mm cable. The diffuser drops onto the
+the floor (3 mm countersunk wood screws, 12–16 mm long) and a cable arch (7.5 mm wide, 7 mm high) at both ends for round ~6 mm cable. The diffuser drops onto the
 ledge at the top and is held by four small bumps that click into grooves in the long walls.
 
 Main parameters: `BODY_R`, `END_CENTRE`, `BODY_H`, `WALL`, `FLOOR`, `RIB_X`, `SCREW_Y`, `CABLE_W`, `CABLE_SPRING`,
@@ -44,7 +44,7 @@ Inside 130 × 156.5 × 32 mm; outside 134.8 × 161.3 × 37.4 mm with the lid, 18
   terminal block.
 - **12 V side:** a 50 × 70 mm perfboard on four standoffs (M2 × 6 self-tapping screws), with the D1 mini, the
   step-down, the ULN2003A and two 3-way terminal blocks facing the wiring channel. The LED line leaves through a PG7
-  gland. A slot in the front wall reaches the D1 mini's USB port.
+  gland. A 13 × 8 mm slot in the front wall reaches the D1 mini's USB port and takes micro-USB and USB-C plug bodies.
 ![Lid from below: locating lip, divider rib, hold-down pads, vents](images/lid.png)
 
 - **Lid:** four M3 × 8 countersunk screws (DIN 7991) into M3 heat-set inserts in the corner columns; a lip locates it.
@@ -79,9 +79,10 @@ PETG, 0.4 mm nozzle, 0.2 mm layers, no supports.
 | Controller box | floor down | 6 walls (2.4 mm), 30 % infill |
 | Controller lid | top face down (as exported) | |
 
-Ready-made Bambu Studio projects with these settings are in `../3mf`: sliced for the Bambu Lab A1 (0.4 mm nozzle, textured PEI plate,
-Bambu PETG HF and PETG Translucent), one filament per plate. About 15 minutes per body, 13 per diffuser, 2 h 40 min for
-the box and 1 h 15 min for the lid on the A1; Bambu Studio converts the projects for other printers.
+A ready-made Bambu Studio project with these settings is `../3mf/gloam-a1.3mf`: the whole set (16 bodies, 16 diffusers, the
+controller box and its lid) on six plates, sliced for the Bambu Lab A1 (0.4 mm nozzle, textured PEI plate, Bambu PETG HF and
+PETG Translucent), one filament per plate. About 15 minutes per body, 13 per diffuser, 2 h 40 min for the box and 1 h 15 min
+for the lid on the A1; Bambu Studio converts the project for other printers.
 
 The holes in the walls have a 45° roof so they print without support. Press the inserts in with a soldering iron at
 about 230 °C.
